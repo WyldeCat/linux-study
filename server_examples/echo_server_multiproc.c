@@ -2,6 +2,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
+#include <signal.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -34,7 +35,7 @@ int main( )
 		exit(0);
 	}
 
-	state = listen(server_sockfd, 5);
+	state = listen(server_sockfd, 1);
 
 	if(state == -1)
 	{

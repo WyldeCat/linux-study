@@ -50,6 +50,7 @@ int main( )
 				{
 					if(FD_ISSET(fd[i], &readfds))
 					{
+						printf("I can read %d!!\n",i);
 						while((n=read(fd[i], buf, 255)) > 0)
 						{ // how read works?
 							printf("(%d) [%d] %s\n", state, i, buf);
