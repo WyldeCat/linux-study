@@ -7,29 +7,29 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 void *t_function(void *data)
 {
-	printf("thread created..\n");
-	char buf[1024]={0,};
-	int sockfd = *(int*)data;
+	char buf[64]={0,};
+	int sockfd = *(int*)data, readn;
 
-	read(sockfd,buf,sizeof buf);
-	printf("Client said : %s\n",buf);
-	write(sockfd,buf,sizeof buf);
-
+	while(1)
+	{
+		readn = read(sockfd,buf,sizeof buf);
+		if(readn == 0) break;
+		write(sockfd,buf,sizeof buf);
+	}
 	close(sockfd);
-
-	return;
 }
 
 int main( )
 {
 	int size_client_addr, state, i;
-	int server_sockfd, client_sockfd[1024];
+	int server_sockfd, client_sockfd[4096];
 	struct sockaddr_in server_addr, client_addr;
 
-	pthread_t threads[1024];
+	pthread_t threads[4096];
 	int cnt_threads=0;
 	
 	server_sockfd = socket(PF_INET, SOCK_STREAM, 0);
@@ -64,9 +64,8 @@ int main( )
 		exit(0);
 	}
 
-	signal(SIGCHLD,SIG_IGN);
 
-	while(cnt_threads<1024)
+	while(1)
 	{
 		client_sockfd[cnt_threads] = accept(server_sockfd,(struct sockaddr *)&client_addr,&size_client_addr);
 		if(client_sockfd[cnt_threads] == -1)
@@ -75,8 +74,18 @@ int main( )
 			exit(0);
 		}
 
-		pthread_create(&threads[cnt_threads], NULL,t_function,(void *)&client_sockfd[cnt_threads]);
-		pthread_detach(threads[cnt_threads]);
+		state = pthread_create(&threads[cnt_threads], NULL,t_function,(void *)&client_sockfd[cnt_threads]);
+		if(state!=0)
+		{
+			perror("thread creation error: ");
+			exit(0);
+		}
+		state = pthread_detach(threads[cnt_threads]);
+		if(state!=0)
+		{
+			perror("thread detach error: ");
+			exit(0);
+		}
 		cnt_threads++;
 	}
 	close(server_sockfd);
