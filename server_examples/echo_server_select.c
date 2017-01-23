@@ -68,6 +68,8 @@ int main( )
 
 		for(i=0; i<max_fd; i++)
 		{
+			if(i==server_sockfd) continue;
+
 			if(FD_ISSET(i,&temp))
 			{
 				n = read(i, buf, sizeof buf);	
@@ -82,11 +84,9 @@ int main( )
 					buf[n]=0;
 					printf("Received %s from %d. I'll echo that.\n", buf, i);
 					write(i, buf, n);
-					fprintf(stderr,"Can I??");
 				}
 			}
 		}
 	}
-
 	return 0;
 }
