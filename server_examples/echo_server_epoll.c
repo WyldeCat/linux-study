@@ -53,6 +53,7 @@ int main( )
 	ev.data.fd = server_sockfd;
 	epoll_ctl(epoll_fd, EPOLL_CTL_ADD, server_sockfd, &ev);
 
+
 	while(1)
 	{
 		n = epoll_wait(epoll_fd, events, EPOLL_SIZE, -1);
@@ -72,7 +73,7 @@ int main( )
 			else 
 			{
 				memset(buf, 0, sizeof buf);
-				readn = read(events[i].data.fd, buf, sizeof buf);
+				readn = read(events[i].data.fd, buf, szeof buf);
 				handle_err(readn,"read error");
 				if(readn==0)
 				{

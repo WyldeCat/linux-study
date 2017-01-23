@@ -41,7 +41,7 @@ int main( )
 		write(client_sockfd,"hello, world", strlen("hello, world"));
 		read(client_sockfd,buf,1024);
 
-		printf("server said... : %s\n",buf);
+		printf("server said... : %s",buf);
 		// TODO: new line check..!
 	}
 	close(client_sockfd);
