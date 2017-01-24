@@ -64,11 +64,9 @@ int main( )
 				memset(buf,0x00,1024);
 				if(read(client_sockfd, buf, 1024) <= 0)
 				{
-					printf("closing..!\n");
 					close(client_sockfd);
 					exit(0);
 				}
-				printf(" > %s\n",buf);
 				write(client_sockfd, buf, strlen(buf));
 			}
 		}

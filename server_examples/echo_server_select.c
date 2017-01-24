@@ -53,7 +53,7 @@ int main( )
 	while(1)
 	{
 		temp = read_fds;
-		fd_num = select(max_fd+1, &temp, NULL, NULL, NULL);
+		fd_num = select(1024, &temp, NULL, NULL, NULL);
 
 		handle_error(fd_num, "select");	
 
@@ -63,10 +63,9 @@ int main( )
 			handle_error(client_sockfd, "accept");
 
 			FD_SET(client_sockfd, &read_fds);
-			max_fd = max(max_fd, client_sockfd+1);
 		}
 
-		for(i=0; i<max_fd; i++)
+		for(i=0; i<1024; i++)
 		{
 			if(i==server_sockfd) continue;
 
@@ -75,14 +74,11 @@ int main( )
 				n = read(i, buf, sizeof buf);	
 				if(n==0)
 				{
-					printf("Client with %d fd closed.\n",i);
 					FD_CLR(i,&read_fds);
-					close(i);
 				}
 				else 
 				{
 					buf[n]=0;
-					printf("Received %s from %d. I'll echo that.\n", buf, i);
 					write(i, buf, n);
 				}
 			}
