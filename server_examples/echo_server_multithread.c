@@ -17,10 +17,11 @@ void *t_function(void *data)
 	while(1)
 	{
 		readn = read(sockfd,buf,sizeof buf);
+		printf("readed..%d\n",sockfd);
 		if(readn == 0) break;
-		write(sockfd,buf,sizeof buf);
+		write(sockfd,buf,readn);
 	}
-	close(sockfd);
+	printf("closed..%d\n",sockfd);
 }
 
 int main( )
@@ -87,6 +88,7 @@ int main( )
 			exit(0);
 		}
 		cnt_threads++;
+		printf("%d\n",cnt_threads);
 	}
 	close(server_sockfd);
 	return 0;
