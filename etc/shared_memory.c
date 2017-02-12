@@ -27,6 +27,7 @@ int main( )
    void *shared_memory = (void *)0;
 
    shmid = shmget((key_t)1234, sizeof(int), 0666 | IPC_CREAT);
+   printf("shmid1 : %d\n",shmid);
 
    if(shmid == -1)
    {
@@ -35,6 +36,7 @@ int main( )
    }
 
    shared_memory = shmat(shmid, (void *)0,0);
+   printf("shm1 : %d\n",shared_memory);
    // descriptor of the shared memory, start address of the shared memory, mode
    if(shared_memory == (void *)-1)
    {
@@ -48,12 +50,14 @@ int main( )
    if(pid == 0)
    {
       shmid = shmget((key_t)1234, sizeof(int), 0666 | IPC_CREAT);
+      printf("shmid2 : %d\n",shmid);
       if(shmid == -1)
       {
          perror("shmget");
          exit(0);
       }
       shared_memory = shmat(shmid,(void *)0, 0);
+      printf("shm2 : %d\n",shared_memory);
       if(shared_memory == (void *)-1)
       {
          perror("shmat");
