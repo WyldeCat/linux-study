@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <memory>
 #include <vector>
+#include <map>
+#include <functional>
 
 #include <stdlib.h>
 
@@ -55,13 +57,22 @@ int main( )
   void *a = malloc(1024 * sizeof(int));
   int b;
 
-  my_alloc<int>::set_offset(a);
-  std::vector<int,my_alloc<int> > v;
-  v.push_back(1);
-  v.push_back(2);
-  printf("a: %d\n", a);
-  printf("b: %d\n", b);
-  printf("v.begin() : %d, *v.begin() : %d\n", v.begin(), *v.begin());
-  printf("++v.begin() : %d, *(++v.begin()) : %d\n",++v.begin(), *(++v.begin()));
+  my_alloc<std::pair<int,int>>::set_offset(a);
+  std::map<int, int, std::less<int>, my_alloc<std::pair<int,int>>> mp; 
+
+  printf("a : %d\n",a);
+  mp.insert(std::make_pair(1,3));
+  printf("mp.begin() : %d, mp.begin()->first : %d\n", mp.begin(), mp.begin()->first);
+  printf("&mp[1] : %d, mp[1] : %d\n",&mp[1], mp[1]);
+  mp.insert(std::make_pair(0,4));
+  printf("mp.begin() : %d, mp.begin()->first : %d\n", mp.begin(), mp.begin()->first);
+  printf("&mp[1] : %d, mp[1] : %d\n",&mp[1], mp[1]);
+  printf("&mp[0] : %d, mp[0] : %d\n",&mp[0], mp[0]);
+  mp.insert(std::make_pair(-1,4));
+  printf("mp.begin() : %d, mp.begin()->first : %d\n", mp.begin(), mp.begin()->first);
+  printf("&mp[1] : %d, mp[1] : %d\n",&mp[1], mp[1]);
+  printf("&mp[0] : %d, mp[0] : %d\n",&mp[0], mp[0]);
+  printf("&mp[-1] : %d, mp[-1] : %d\n",&mp[-1], mp[-1]);
+ 
   return 0;
 }
